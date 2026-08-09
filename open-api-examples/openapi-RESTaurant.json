@@ -1,0 +1,1607 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Damn Vulnerable RESTaurant",
+        "description": "An intentionally vulnerable API service designed for learning and training purposes for ethical hackers, security engineers, and developers.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8091/",
+            "description": "Local API server"
+        }
+    ],
+    "paths": {
+        "/healthcheck": {
+            "get": {
+                "tags": [
+                    "healthcheck"
+                ],
+                "summary": "Healthcheck",
+                "operationId": "healthcheck_healthcheck_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menu": {
+            "get": {
+                "tags": [
+                    "menu"
+                ],
+                "summary": "Get Menu",
+                "operationId": "get_menu_menu_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/MenuItem"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Menu Menu Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "menu"
+                ],
+                "summary": "Create Menu Item",
+                "operationId": "create_menu_item_menu_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MenuItemCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MenuItem"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/menu/{item_id}": {
+            "delete": {
+                "tags": [
+                    "menu"
+                ],
+                "summary": "Delete Menu Item",
+                "operationId": "delete_menu_item_menu__item_id__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "menu"
+                ],
+                "summary": "Update Menu Item",
+                "operationId": "update_menu_item_menu__item_id__put",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MenuItemCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MenuItem"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "post": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Create Order",
+                "operationId": "create_order_orders_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get Orders",
+                "operationId": "get_orders_orders_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Skip"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Order"
+                                    },
+                                    "title": "Response Get Orders Orders Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{order_id}": {
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get Order",
+                "operationId": "get_order_orders__order_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Order Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/status/{order_id}": {
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get Order Status",
+                "operationId": "get_order_status_orders_status__order_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Order Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderStatusResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get Profile",
+                "operationId": "get_profile_profile_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRead"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Update Profile",
+                "operationId": "update_profile_profile_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/apis__auth__services__update_profile_service__UserUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserUpdate-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Patch Profile",
+                "operationId": "patch_profile_profile_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/apis__auth__services__patch_profile_service__UserUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/token": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get Token",
+                "operationId": "get_token_token_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_get_token_token_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register User",
+                "operationId": "register_user_register_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reset-password": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Reset Password",
+                "operationId": "reset_password_reset_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPasswordData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reset-password/new-password": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Set New Password",
+                "operationId": "set_new_password_reset_password_new_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewPasswordData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/stats/disk": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Get Disk Usage Stats",
+                "operationId": "get_disk_usage_stats_admin_stats_disk_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "parameters",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "",
+                            "title": "Parameters"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DiskUsage"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/update_role": {
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update User Role",
+                "operationId": "update_user_role_users_update_role_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRoleUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRoleUpdate"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/referral-code": {
+            "get": {
+                "tags": [
+                    "referrals"
+                ],
+                "summary": "Get Referral Code Endpoint",
+                "description": "Obtains or creates a referral code for the current user.",
+                "operationId": "get_referral_code_endpoint_referral_code_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReferralCodeResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/apply-referral": {
+            "post": {
+                "tags": [
+                    "referrals"
+                ],
+                "summary": "Apply Referral Code",
+                "description": "Referrals can be applied by users to receive discounts.",
+                "operationId": "apply_referral_code_apply_referral_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ApplyReferralRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplyReferralResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/discount-coupons": {
+            "get": {
+                "tags": [
+                    "referrals"
+                ],
+                "summary": "Get Discount Coupons",
+                "description": "Retrieve all discount coupons for the current user.",
+                "operationId": "get_discount_coupons_discount_coupons_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/DiscountCouponRead"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Discount Coupons Discount Coupons Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApplyReferralRequest": {
+                "properties": {
+                    "referral_code": {
+                        "type": "string",
+                        "title": "Referral Code"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "referral_code"
+                ],
+                "title": "ApplyReferralRequest"
+            },
+            "ApplyReferralResponse": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "discount": {
+                        "type": "number",
+                        "title": "Discount"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "message",
+                    "discount"
+                ],
+                "title": "ApplyReferralResponse"
+            },
+            "Body_get_token_token_post": {
+                "properties": {
+                    "grant_type": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "password"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Grant Type"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "title": "Scope",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Id"
+                    },
+                    "client_secret": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Secret"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "Body_get_token_token_post"
+            },
+            "DiscountCouponRead": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "discount_percentage": {
+                        "type": "integer",
+                        "title": "Discount Percentage"
+                    },
+                    "used": {
+                        "type": "boolean",
+                        "title": "Used"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "used_at": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Used At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "discount_percentage",
+                    "used",
+                    "created_at",
+                    "used_at"
+                ],
+                "title": "DiscountCouponRead"
+            },
+            "DiskUsage": {
+                "properties": {
+                    "output": {
+                        "type": "string",
+                        "title": "Output"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "output"
+                ],
+                "title": "DiskUsage"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "MenuItem": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "price": {
+                        "type": "number",
+                        "title": "Price"
+                    },
+                    "category": {
+                        "type": "string",
+                        "title": "Category"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description"
+                    },
+                    "image_base64": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image Base64"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "price",
+                    "category"
+                ],
+                "title": "MenuItem"
+            },
+            "MenuItemCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "price": {
+                        "type": "number",
+                        "title": "Price"
+                    },
+                    "category": {
+                        "type": "string",
+                        "title": "Category"
+                    },
+                    "image_url": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image Url"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "price",
+                    "category"
+                ],
+                "title": "MenuItemCreate"
+            },
+            "NewPasswordData": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "reset_password_code": {
+                        "type": "string",
+                        "title": "Reset Password Code"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "title": "New Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "reset_password_code",
+                    "new_password"
+                ],
+                "title": "NewPasswordData"
+            },
+            "Order": {
+                "properties": {
+                    "delivery_address": {
+                        "type": "string",
+                        "title": "Delivery Address"
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "title": "Phone Number"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id"
+                    },
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        },
+                        "type": "array",
+                        "title": "Items",
+                        "default": []
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "final_price": {
+                        "type": "number",
+                        "title": "Final Price"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "delivery_address",
+                    "phone_number",
+                    "id",
+                    "user_id",
+                    "status",
+                    "final_price"
+                ],
+                "title": "Order"
+            },
+            "OrderCreate": {
+                "properties": {
+                    "delivery_address": {
+                        "type": "string",
+                        "title": "Delivery Address"
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "title": "Phone Number"
+                    },
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        },
+                        "type": "array",
+                        "title": "Items",
+                        "default": []
+                    },
+                    "coupon_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Coupon Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "delivery_address",
+                    "phone_number"
+                ],
+                "title": "OrderCreate"
+            },
+            "OrderItem": {
+                "properties": {
+                    "menu_item_id": {
+                        "type": "integer",
+                        "title": "Menu Item Id"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "title": "Quantity"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "menu_item_id",
+                    "quantity"
+                ],
+                "title": "OrderItem"
+            },
+            "OrderStatus": {
+                "type": "string",
+                "enum": [
+                    "Pending",
+                    "Preparing",
+                    "OnTheWay",
+                    "Delivered",
+                    "Cancelled"
+                ],
+                "title": "OrderStatus"
+            },
+            "OrderStatusResponse": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "order_id": {
+                        "type": "integer",
+                        "title": "Order Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "status",
+                    "order_id"
+                ],
+                "title": "OrderStatusResponse"
+            },
+            "ReferralCodeResponse": {
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "title": "Code"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "code"
+                ],
+                "title": "ReferralCodeResponse"
+            },
+            "ResetPasswordData": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username"
+                ],
+                "title": "ResetPasswordData"
+            },
+            "Token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token",
+                    "token_type"
+                ],
+                "title": "Token"
+            },
+            "UserCreate": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "title": "Phone Number"
+                    },
+                    "first_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password",
+                    "phone_number"
+                ],
+                "title": "UserCreate"
+            },
+            "UserRead": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "title": "Phone Number"
+                    },
+                    "first_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Name"
+                    },
+                    "role": {
+                        "type": "string",
+                        "title": "Role"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "phone_number",
+                    "role"
+                ],
+                "title": "UserRead"
+            },
+            "UserRoleUpdate": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "role": {
+                        "type": "string",
+                        "title": "Role"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "role"
+                ],
+                "title": "UserRoleUpdate"
+            },
+            "UserUpdate-Output": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "first_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Name"
+                    },
+                    "phone_number": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone Number"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username"
+                ],
+                "title": "UserUpdate"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "apis__auth__services__patch_profile_service__UserUpdate": {
+                "properties": {
+                    "first_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Name"
+                    },
+                    "phone_number": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone Number"
+                    }
+                },
+                "additionalProperties": true,
+                "type": "object",
+                "title": "UserUpdate"
+            },
+            "apis__auth__services__update_profile_service__UserUpdate": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "first_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Name"
+                    },
+                    "phone_number": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone Number"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username"
+                ],
+                "title": "UserUpdate"
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "token"
+                    }
+                }
+            }
+        }
+    }
+}
