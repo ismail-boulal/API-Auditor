@@ -50,7 +50,8 @@ ROLE_FIELDS = (
 
 def authenticate(
     base_url,
-    api_inventory,
+    api_inventory=None,
+    login_url=None,
     tokenA=None,
     tokenB=None,
     tokenAD=None,
@@ -66,8 +67,7 @@ def authenticate(
 ):
     print("[!] Authentication started")
 
-    # Mode 1 : tokens directement fournis
-    if tokenA and (tokenB or tokenAD):
+    if tokenA:
         print("[!] Authentication mode: provided tokens")
 
         return mode_token(
@@ -76,7 +76,6 @@ def authenticate(
             tokenAD=tokenAD,
         )
 
-    # Construction des identifiants du compte principal
     credentialA = build_credential(
         username=usernameA,
         email=emailA,
@@ -84,7 +83,6 @@ def authenticate(
         label="A",
     )
 
-    # Compte du même niveau pour les tests BOLA
     credentialB = build_credential(
         username=usernameB,
         email=emailB,
@@ -92,7 +90,6 @@ def authenticate(
         label="B",
     )
 
-    # Compte privilégié pour les tests BFLA
     credentialAD = build_credential(
         username=usernameAD,
         email=emailAD,
@@ -100,28 +97,26 @@ def authenticate(
         label="AD",
     )
 
-    # Le compte A est obligatoire.
-    # Au moins B ou AD doit être fourni.
-    if credentialA and (credentialB or credentialAD):
+    if credentialA:
         print("[!] Authentication mode: credentials")
 
         return mode_credentials(
             base_url=base_url,
             api_inventory=api_inventory,
+            login_url=login_url,
             credentialA=credentialA,
             credentialB=credentialB,
             credentialAD=credentialAD,
         )
 
     raise ValueError(
-        "Authentication requires:\n"
-        "- account A using tokenA or complete credentials,\n"
-        "- and at least account B or account AD.\n\n"
-        "Valid token examples:\n"
-        "- tokenA and tokenB for BOLA,\n"
-        "- tokenA and tokenAD for BFLA,\n"
-        "- tokenA, tokenB and tokenAD for both.\n\n"
-        "The same combinations are supported with credentials."
+        "Authentication requires account A.\n"
+        "Provide either:\n"
+        "- tokenA, or\n"
+        "- passwordA together with usernameA or emailA.\n\n"
+        "Accounts B and AD are optional:\n"
+        "- add account B (token or credentials) to enable BOLA,\n"
+        "- add account AD (token or credentials) to enable BFLA."
     )
 
 def mode_token(tokenA, tokenB=None, tokenAD=None):
@@ -156,38 +151,28 @@ def mode_token(tokenA, tokenB=None, tokenAD=None):
 
     return accountA, accountB, accountAD
 
-def mode_credentials(
-    base_url,
-    api_inventory,
-    credentialA,
-    credentialB=None,
-    credentialAD=None,
-):
-    login_endpoint = find_login_endpoint(api_inventory)
-    login_url = build_url(base_url, login_endpoint.path)
+def mode_credentials(base_url, api_inventory=None, login_url=None, credentialA=None, credentialB=None, credentialAD=None):
+    # If no ready login_url is provided, fall back to discovering it from the
+    # parsed API inventory (OpenAPI path). When login_url is given (blackbox /
+    # GraphQL introspection path), skip discovery entirely.
+    if login_url is None:
+        login_endpoint = find_login_endpoint(api_inventory)
+        login_url = build_url(base_url, login_endpoint.path)
 
-    print(
-        f"[+] Selected login endpoint: "
-        f"{login_endpoint.method} {login_endpoint.path}"
-    )
+        print(
+            f"[+] Selected login endpoint: "
+            f"{login_endpoint.method} {login_endpoint.path}"
+        )
+    else:
+        print(f"[+] Using provided login endpoint: {login_url}")
 
-    # Authentification du compte principal
-    tokenA,roleA = authenticate_account(
-        login_url=login_url,
-        credential=credentialA,
-    )
+    tokenA,roleA = authenticate_account(login_url=login_url,credential=credentialA,)
 
-    accountA = create_account_from_credential(
-        label="A",
-        credential=credentialA,
-        token=tokenA,
-        role=roleA
-    )
+    accountA = create_account_from_credential(label="A",credential=credentialA,token=tokenA,role=roleA)
 
     accountB = None
     accountAD = None
 
-    # Authentification du compte B seulement s'il est fourni
     if credentialB:
         tokenB,roleB = authenticate_account(
             login_url=login_url,
@@ -425,9 +410,7 @@ def extract_token(response_data):
 
     return None
 
-# we need to extract the role even if it is nested in the response.json() and even if the field value is boolean, value or a list 
 def extract_role(response_data):
-    # response.json() is usually a dictionnary, let's make sure of that using isinstance(value,type)
     if not isinstance(response_data, dict):
         return None
 

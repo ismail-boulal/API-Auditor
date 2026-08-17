@@ -1,16 +1,14 @@
 # core/models.py
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any,Optional
 
 
 print("[!] Models reached")
-# ceci est une class auth pour definir si une authentification est requise et quel est son schema e.g. BearerAuth APIkeys ...
 @dataclass
 class Authentication:
     required: bool = False
     schemes: list[str] = field(default_factory=list)
 
-# ceci est une class requestbody qui contient le content type et son schema ainsi que son obligation dans le code 
 @dataclass
 class RequestBody:
     required: bool = False
@@ -29,7 +27,6 @@ class Response:
 
 
 
-# ceci est une class des paramètres de ce endpoint 
 @dataclass
 class Parameter:
     name: str
@@ -40,7 +37,6 @@ class Parameter:
     example: Any = None
     is_object_candidate: bool = False
 
-# la class mère de notre Endpoint elle definit tous les champs necaissaire pour les feeder dans notre moteur BOLA BFLA 
 @dataclass
 class Endpoint:
     path: str
@@ -74,4 +70,37 @@ class Finding:
     confidence: str | int | None = None
     evidence: dict[str, Any] = field(default_factory=dict)
     
+@dataclass
+class GraphQLArgument:
+    name: str
+    type: str
+    required: bool = False
+    default_value: Any = None
+
+@dataclass
+class GraphQLField:
+    name: str
+    type: str 
+    required: bool = False
+    description: str | None = None 
+    kind: str | None = None 
+
+@dataclass
+class GraphQLOperation:
+    name: str
+    operation_type: str
+    arguments: list[GraphQLArgument]
+    return_types: str | None 
+    fields: list[GraphQLField]
+    description: str | None =  None
+    object_candidate: list[str]= field(default_factory=list)
+    sensitive_score: int = 0
+
+@dataclass
+class GraphQLSchema:
+    queries: list[GraphQLOperation]
+    mutations: list[GraphQLOperation]
+    types: dict
+    subscriptions: list[GraphQLOperation]  = field(default_factory=list)
+
     
