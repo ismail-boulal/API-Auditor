@@ -6,6 +6,7 @@ from core.models import Finding
 import display
 from urllib.parse import urlparse 
 import os
+import random 
 
 os.system('')
 
@@ -15,7 +16,9 @@ White_list = {"login","signin","sign-in","authenticate","authentication","token"
 STRONG_SEGMENTS = {"admin", "administrator", "internal", "management", "root", "superuser"}
 ROLE_FIELDS = ("role","roles","user_role","is_admin","is_staff","is_superuser","permissions","scope","authorities","account_type","user_type","privilege","group")
 role_escalations = {'customer': 'employee','user': 'admin','viewer': 'editor','editor': 'owner','guest': 'user','member': 'moderator','moderator': 'admin','subscriber': 'contributor','support': 'support_admin','analyst': 'admin','operator': 'admin','free': 'pro',}
-HAR_B = Path("HarFiles") / "HarB.har"
+HAR_B = Path("HarFiles") / "EnumHar.har"
+random_password_modification = ['password_pwned', 'a pawn is down' , 'checkmate', 'the king is down' , 'valar morghulis']
+
 
 def bfla(endpoints, accounts, url):
     bfla_candidates=[]
@@ -79,6 +82,13 @@ def bfla(endpoints, accounts, url):
         if body_is_required:
             PROPS = (endpoint.request_body and endpoint.request_body.properties) or {}  
             ATTRIBUTE = [property for property in PROPS if property] 
+            ################ UPDATE ATTEMPT, REMOVE THIS BLOC IF ANYTHING GOES WRONG #################
+            for attr in ATTRIBUTE:
+                prop = PROPS.get(attr, {})
+                if isinstance(prop, dict) and "example" in prop:
+                    found_values["request_body"][attr] = prop["example"]
+            
+            ##########################################################################################
             role_isThere=False
             for elt in ATTRIBUTE:
                 if elt.lower() in ROLE_FIELDS:
@@ -179,7 +189,7 @@ def bfla(endpoints, accounts, url):
         for _,value in found_values.items():
             for element in value:
                 if element == 'password': 
-                    value[element]='ADMIN_IS_PWNED!!:'
+                    value[element]=random.choice(random_password_modification)
                 elif element in ROLE_FIELDS: 
                     for role in role_escalations:  
                         if role.capitalize() == value[element]:
@@ -196,17 +206,21 @@ def bfla(endpoints, accounts, url):
         response_status=analyse_response(response.text)
         confidence=evaluate_confidence(response_status,resource_is_affected,response.status_code)
         if confidence:
-            finding= Finding(
-                vulnerability='BFLA',
+            finding = Finding(
+                vulnerability="BFLA",
                 endpoint=endpoint,
                 confidence=confidence,
-                evidence={'evidence':[
-                            before.text if before is not None else None,
-                            after.text if after is not None else None,
-                            resource_is_affected,
-                            safe_json(response),
-                        ]}
-                
+                evidence={
+                    "account": accountA,
+                    "status_code": response.status_code,
+                    "method": method,
+                    "request_url": request_url,
+                    "request_body": found_values["request_body"],
+                    "before_response_body": before.text if before is not None else None,
+                    "attack_response_body": response.text,
+                    "after_response_body": after.text if after is not None else None,
+                    "resource_is_affected": resource_is_affected
+                }
             )
             
             findings.append(finding)

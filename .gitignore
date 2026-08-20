@@ -4,3 +4,7 @@ __pycache__/
 
 HarFiles/HarA.har
 HarFiles/HarB.har
+__pycache__/display.cpython-313.pyc
+core/__pycache__/http_client.cpython-313.pyc
+parsers/__pycache__/openapi_parser.cpython-313.pyc
+parsers/__pycache__/openapi_parser.cpython-313.pyc

@@ -98,7 +98,7 @@ def build_graphql_operation(operation_type="query",operation_name=None,arguments
 """.strip()
 
 def get_proxies(proxy):
-    """Convertit une string proxy en dict pour requests. Retourne None si proxy est None/vide."""
+    
     if not proxy:
         return None
     return {

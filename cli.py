@@ -1,9 +1,9 @@
 import argparse
-from discovery.blackboxv2 import discovery
+from discovery.blackbox import discovery
 from parsers import graphql_parser, openapi_parser
 import display
 from auth.ses import authenticate
-from engines.bolav2 import bola
+from engines.bola import bola
 from engines.bfla import bfla
 from engines.AccessControlQL import accessControlQL
 from report import generate_report

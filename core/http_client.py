@@ -1,7 +1,8 @@
 import requests
 
 
-def send_request(method,url,headers=None,query_params=None,json_body=None,form_data=None,cookies=None,timeout=10):
+def send_request(method,url,headers=None,query_params=None,json_body=None,form_data=None,cookies=None,timeout=10,proxy=None):
+    proxies=get_proxies(proxy)
     try:
       response=requests.request(
           method=method,
@@ -14,7 +15,7 @@ def send_request(method,url,headers=None,query_params=None,json_body=None,form_d
           timeout=timeout,
           verify=True,
           allow_redirects=False,
-          # proxies= later 
+          proxies= proxies 
                
       )
       
@@ -24,3 +25,11 @@ def send_request(method,url,headers=None,query_params=None,json_body=None,form_d
         
     return response
 
+def get_proxies(proxy):
+    
+    if not proxy:
+        return None
+    return {
+        "http": proxy,
+        "https": proxy
+    }

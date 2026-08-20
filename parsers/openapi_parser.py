@@ -20,8 +20,15 @@ def parse_openapi(openapi_spec):
         "trace"
     }
     print("[!] OpenAPI parser is called")
-    parser = ResolvingParser(openapi_spec)
-    spec = parser.specification
+    # parser = ResolvingParser(openapi_spec)
+    # spec = parser.specification
+    ##############if something broke, here is what i did lastly 
+    if isinstance(openapi_spec, dict):
+        spec = openapi_spec
+    else:
+        parser = ResolvingParser(openapi_spec)
+        spec = parser.specification
+    ############## 
     endpoints = []
     paths = spec.get("paths", {})
     for path, path_items in paths.items():
